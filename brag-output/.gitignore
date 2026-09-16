@@ -1,0 +1,7 @@
+# Restorable build inputs — see README.md
+composition/node_modules/
+composition/snapshots/
+
+# The bundled track is already committed once under .claude/skills/brag/assets/music/.
+# Don't keep a second 3.9MB copy in the repo; README.md has the restore command.
+composition/assets/music/*.mp3

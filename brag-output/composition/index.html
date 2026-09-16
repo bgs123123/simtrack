@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>AMS2 — Ant vs Bee Championship</title>
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/music/audio-bands.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: #050505; color: #f0f0f0;
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      :root {
+        --brand-red: #ff3e3e;
+        --red-600: #dc2626;
+        --bg-deep: #050505;
+        --surface: #0f0f0f;
+        --border: #1f1f1f;
+        --muted: #7b7b7b;
+        --bass: 0;
+        --overall: 0;
+      }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--bg-deep); }
+
+      .mono { font-family: 'JetBrains Mono', monospace; }
+      .ital { font-style: italic; font-weight: 900; text-transform: uppercase; letter-spacing: -0.04em; }
+
+      /* audio-reactive vignette — breathes with overall music energy */
+      #vignette {
+        position: absolute; inset: 0; pointer-events: none; z-index: 0;
+        background: radial-gradient(ellipse at 50% 45%, rgba(255,62,62,0.10) 0%, rgba(5,5,5,0) 62%);
+        opacity: calc(0.25 + var(--overall) * 0.75);
+      }
+
+      .clip { position: absolute; inset: 0; }
+      .stage { position: absolute; inset: 0; display: flex; flex-direction: column;
+               align-items: center; justify-content: center; z-index: 2; }
+
+      .micro { font-size: 15px; font-weight: 900; text-transform: uppercase;
+               letter-spacing: 0.22em; color: var(--muted); }
+      .micro-red { color: var(--brand-red); }
+
+      /* live dot — glow driven by bass */
+      .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--brand-red);
+             display: inline-block;
+             box-shadow: 0 0 calc(6px + var(--bass) * 26px) rgba(255,62,62,calc(0.35 + var(--bass) * 0.65)); }
+      .dot-row { display: flex; align-items: center; gap: 14px; }
+
+      .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; }
+
+      /* ---------- Scene 1 : rivalry ---------- */
+      #s1-panel { width: 820px; padding: 56px 64px 60px; }
+      .score-row { display: flex; align-items: center; justify-content: space-between; }
+      .score-name { font-size: 62px; }
+      .score-num { font-size: 104px; font-weight: 700; letter-spacing: -0.06em; line-height: 1; }
+      .rule { height: 1px; background: var(--border); width: 100%; margin: 38px 0; }
+      .is-bee { color: var(--brand-red); }
+      #s1-hook { margin-top: 54px; font-size: 27px; font-weight: 700; letter-spacing: 0.17em;
+                 color: #d4d4d4; text-transform: uppercase; }
+
+      /* ---------- Scene 2 : Round 01 hero ---------- */
+      #s2-card { width: 1460px; padding: 64px 76px 68px; border-left: 5px solid var(--red-600);
+                 box-shadow: -18px 0 calc(24px + var(--bass) * 46px) rgba(220,38,38,calc(0.05 + var(--bass) * 0.22)); }
+      #s2-title { font-size: 168px; line-height: 0.92; margin-top: 30px; }
+      #s2-sub { font-size: 34px; font-weight: 300; letter-spacing: 0.22em; color: #a3a3a3;
+                text-transform: uppercase; margin-top: 22px; }
+      #s2-sub em { color: #fff; font-size: 26px; font-style: italic; letter-spacing: 0.02em; }
+      #s2-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px;
+                  border-top: 1px solid var(--border); padding-top: 46px; margin-top: 52px; }
+      .stat-l { font-size: 15px; font-weight: 700; text-transform: uppercase;
+                letter-spacing: 0.16em; color: var(--muted); margin-bottom: 16px; }
+      .stat-v { font-size: 62px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+      .stat-v span { font-size: 24px; font-weight: 400; color: #5f5f5f; }
+      .stat-v i { font-style: normal; }
+      .is-race .stat-l { color: var(--brand-red); }
+      .is-race .stat-v { color: var(--brand-red); }
+      .is-race .stat-v span { color: #7f1d1d; }
+
+      /* ---------- Scene 3 / 4 : tables ---------- */
+      .tbl { width: 1500px; background: var(--surface); border: 1px solid var(--border);
+             border-radius: 18px; overflow: hidden; }
+      .thead { display: grid; grid-template-columns: 130px 1fr 420px 190px;
+               background: rgba(23,23,23,0.8); border-bottom: 1px solid var(--border);
+               font-size: 13px; font-weight: 900; text-transform: uppercase;
+               letter-spacing: 0.2em; color: #a3a3a3; padding: 24px 34px; }
+      .row { display: grid; grid-template-columns: 130px 1fr 420px 190px;
+             align-items: center; padding: 21px 34px; border-bottom: 1px solid var(--border);
+             border-left: 4px solid transparent; }
+      .row-ord { font-size: 16px; font-weight: 700; color: #858585; }
+      .row-trk { font-size: 25px; font-weight: 900; font-style: italic;
+                 text-transform: uppercase; letter-spacing: -0.02em; }
+      .row-car { font-size: 16px; font-weight: 700; font-style: italic;
+                 text-transform: uppercase; color: #a3a3a3; letter-spacing: 0.04em; }
+      .tag { font-size: 12px; letter-spacing: 0.08em; padding: 5px 13px; border-radius: 3px;
+             font-weight: 800; text-transform: uppercase; justify-self: start; }
+      .tag-f1    { background: rgba(220,38,38,0.10); color: #f15252; border: 1px solid rgba(239,68,68,0.22); }
+      .tag-gt3   { background: rgba(8,145,178,0.10); color: #22d3ee; border: 1px solid rgba(34,211,238,0.22); }
+      .tag-endur { background: rgba(202,138,4,0.10);  color: #eab308; border: 1px solid rgba(234,179,8,0.22); }
+      .tag-sprnt { background: rgba(147,51,234,0.10); color: #a855f7; border: 1px solid rgba(168,85,247,0.22); }
+      .row.active { border-left-color: var(--brand-red); background: #181818; }
+
+      #s3-viewport { height: 560px; overflow: hidden; }
+      .sec-head { width: 1500px; display: flex; align-items: flex-end;
+                  justify-content: space-between; margin-bottom: 26px; }
+      .sec-title { font-size: 52px; }
+      .sec-sub { font-size: 15px; text-transform: uppercase; letter-spacing: 0.3em;
+                 color: var(--muted); margin-top: 10px; }
+
+      /* intel drawer */
+      #s4-drawer { background: #0a0a0a; overflow: hidden; height: 0; }
+      #s4-drawer-inner { display: grid; grid-template-columns: repeat(4, 1fr);
+                         gap: 46px; padding: 44px 40px; }
+      .intel-l { font-size: 13px; font-weight: 900; text-transform: uppercase;
+                 letter-spacing: 0.2em; color: #797979; margin-bottom: 10px; }
+      .intel-v { font-size: 30px; font-weight: 700; color: #d4d4d4; }
+      .intel-note-l { color: #a96767; }
+      .intel-note { font-size: 20px; font-style: italic; color: #7f7f7f; line-height: 1.45; }
+      .chev { width: 26px; height: 26px; justify-self: end; position: relative; }
+      .chev::before { content: ''; position: absolute; left: 4px; top: 7px;
+                      width: 13px; height: 13px; border-right: 2.5px solid #525252;
+                      border-bottom: 2.5px solid #525252; }
+      #cursor { position: absolute; width: 30px; height: 30px; z-index: 40; left: 0; top: 0; }
+
+      /* ---------- Scene 5 : points ---------- */
+      #s5-grid { display: grid; grid-template-columns: repeat(5, 200px); gap: 22px; }
+      .pt { background: rgba(23,23,23,0.8); border: 1px solid var(--border);
+            border-radius: 8px; padding: 30px 0; display: flex;
+            flex-direction: column; align-items: center; }
+      .pt-p { font-size: 15px; font-weight: 900; text-transform: uppercase;
+              color: #7b7b7b; letter-spacing: 0.1em; }
+      .pt-v { font-size: 56px; font-weight: 700; margin-top: 10px; letter-spacing: -0.04em; }
+      .pt.is-p1 { background: rgba(220,38,38,0.10); border-color: rgba(239,68,68,0.32); }
+      .pt.is-p1 .pt-p { color: var(--brand-red); }
+      #s5-note { margin-top: 40px; font-size: 18px; font-weight: 700; text-transform: uppercase;
+                 letter-spacing: 0.3em; color: #7f7f7f; }
+
+      /* ---------- Scene 6 : outro ---------- */
+      #s6-mark { background: var(--red-600); color: #fff; padding: 12px 26px;
+                 font-weight: 900; font-style: italic; font-size: 44px;
+                 letter-spacing: -0.05em; display: inline-block; }
+      #s6-title { font-size: 190px; line-height: 1; margin-top: 46px; }
+      #s6-title .vs { color: #6b6b6b; font-weight: 400; font-style: normal;
+                      font-size: 96px; text-transform: lowercase; letter-spacing: 0; }
+      #s6-season { margin-top: 34px; font-size: 20px; font-weight: 700; text-transform: uppercase;
+                   letter-spacing: 0.4em; color: #7f7f7f; }
+      #s6-last { margin-top: 74px; font-size: 26px; font-weight: 700; text-transform: uppercase;
+                 letter-spacing: 0.46em; color: #a3a3a3; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="20"
+         data-width="1920" data-height="1080">
+
+      <div id="vignette"></div>
+
+      <!-- ============ SCENE 1 — rivalry / the zeros ============ -->
+      <section id="s1" class="clip" data-start="0" data-duration="3.5" data-track-index="0">
+        <div class="stage">
+          <div id="s1-panel" class="panel">
+            <div class="dot-row" style="margin-bottom: 46px">
+              <span id="s1-dot" class="dot"></span>
+              <span class="micro micro-red">Season 1.0 — Rivalry Status</span>
+            </div>
+            <div id="s1-ant" class="score-row">
+              <span class="ital score-name">Ant</span>
+              <span class="mono score-num">00</span>
+            </div>
+            <div class="rule"></div>
+            <div id="s1-bee" class="score-row is-bee">
+              <span class="ital score-name">Bee</span>
+              <span class="mono score-num">00</span>
+            </div>
+          </div>
+          <div id="s1-hook" class="mono">Twenty rounds. Two drivers. Nothing scored yet.</div>
+        </div>
+      </section>
+
+      <!-- ============ SCENE 2 — Round 01 : Adelaide ============ -->
+      <section id="s2" class="clip" data-start="3.5" data-duration="4" data-track-index="1">
+        <div class="stage">
+          <div id="s2-card" class="panel">
+            <div class="dot-row">
+              <span id="s2-dot" class="dot"></span>
+              <span class="micro micro-red">Next Event: Round 01</span>
+            </div>
+            <h1 id="s2-title" class="ital">Adelaide</h1>
+            <div id="s2-sub">Porsche 911 • <em>The Season Opener</em></div>
+            <div id="s2-stats">
+              <div class="s2-stat">
+                <div class="stat-l">Practice</div>
+                <div class="stat-v mono"><i id="s2-n1">0</i><span>M</span></div>
+              </div>
+              <div class="s2-stat">
+                <div class="stat-l">Qualifying</div>
+                <div class="stat-v mono"><i id="s2-n2">0</i><span>M</span></div>
+              </div>
+              <div class="s2-stat is-race">
+                <div class="stat-l">Race</div>
+                <div class="stat-v mono"><i id="s2-n3">0</i><span>M</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCENE 3 — season calendar ============ -->
+      <section id="s3" class="clip" data-start="7.5" data-duration="4" data-track-index="2">
+        <div class="stage">
+          <div class="sec-head">
+            <div>
+              <div id="s3-h" class="ital sec-title">Season Calendar</div>
+              <div id="s3-s" class="sec-sub">Click race for track intel</div>
+            </div>
+            <div id="s3-count" class="micro">20 Rounds</div>
+          </div>
+          <div class="tbl">
+            <div class="thead">
+              <div>Order</div><div>Circuit</div><div>Vehicle Class</div><div>Format</div>
+            </div>
+            <div id="s3-viewport" data-layout-allow-overflow="true">
+              <div id="s3-list">
+                <div class="row s3row"><div class="row-ord mono">R01</div><div class="row-trk">Adelaide</div><div class="row-car">Porsche 911</div><span class="tag tag-gt3">GT3</span></div>
+                <div class="row s3row"><div class="row-ord mono">R02</div><div class="row-trk">Bathurst Historic</div><div class="row-car">F Vintage G1</div><span class="tag tag-f1">F1</span></div>
+                <div class="row s3row"><div class="row-ord mono">R03</div><div class="row-trk">Monaco (Azure)</div><div class="row-car">F Classic G2</div><span class="tag tag-f1">F1</span></div>
+                <div class="row s3row"><div class="row-ord mono">R04</div><div class="row-trk">Cascavel</div><div class="row-car">Copa Truck</div><span class="tag tag-sprnt">SPRNT</span></div>
+                <div class="row s3row"><div class="row-ord mono">R05</div><div class="row-trk">Interlagos</div><div class="row-car">F Ulti Hyb G4</div><span class="tag tag-f1">F1</span></div>
+                <div class="row s3row"><div class="row-ord mono">R06</div><div class="row-trk">Barcelona GP</div><div class="row-car">F Ulti Hyb G4</div><span class="tag tag-f1">F1</span></div>
+                <div class="row s3row"><div class="row-ord mono">R07</div><div class="row-trk">Imola Hist 88</div><div class="row-car">F Classic G4</div><span class="tag tag-f1">F1</span></div>
+                <div class="row s3row"><div class="row-ord mono">R08</div><div class="row-trk">Daytona Road</div><div class="row-car">GT3</div><span class="tag tag-endur">ENDUR</span></div>
+                <div class="row s3row"><div class="row-ord mono">R09</div><div class="row-trk">Silverstone</div><div class="row-car">Coppa Fusca</div><span class="tag tag-sprnt">SPRNT</span></div>
+                <div class="row s3row"><div class="row-ord mono">R10</div><div class="row-trk">Hockenheim Ring</div><div class="row-car">GT3</div><span class="tag tag-gt3">GT3</span></div>
+                <div class="row s3row"><div class="row-ord mono">R11</div><div class="row-trk">Indianapolis Oval</div><div class="row-car">F Junior</div><span class="tag tag-f1">F1</span></div>
+                <div class="row s3row"><div class="row-ord mono">R12</div><div class="row-trk">Indianapolis Road</div><div class="row-car">German Group A</div><span class="tag tag-gt3">GT3</span></div>
+                <div class="row s3row"><div class="row-ord mono">R13</div><div class="row-trk">Spa Historic 1970</div><div class="row-car">F Vintage Cars 2</div><span class="tag tag-f1">F1</span></div>
+                <div class="row s3row"><div class="row-ord mono">R14</div><div class="row-trk">Le Mans 24</div><div class="row-car">Stock Car 2023</div><span class="tag tag-endur">ENDUR</span></div>
+                <div class="row s3row"><div class="row-ord mono">R15</div><div class="row-trk">Suzuka (Kanzai)</div><div class="row-car">F V10 G2</div><span class="tag tag-f1">F1</span></div>
+                <div class="row s3row"><div class="row-ord mono">R16</div><div class="row-trk">Kyalami Historic</div><div class="row-car">Fusca Hot</div><span class="tag tag-sprnt">SPRNT</span></div>
+                <div class="row s3row"><div class="row-ord mono">R17</div><div class="row-trk">Laguna Seca</div><div class="row-car">GT3</div><span class="tag tag-gt3">GT3</span></div>
+                <div class="row s3row"><div class="row-ord mono">R18</div><div class="row-trk">Montreal</div><div class="row-car">F V8 Gen 3</div><span class="tag tag-f1">F1</span></div>
+                <div class="row s3row"><div class="row-ord mono">R19</div><div class="row-trk">Sebring</div><div class="row-car">GT Classics</div><span class="tag tag-endur">ENDUR</span></div>
+                <div class="row s3row"><div class="row-ord mono">R20</div><div class="row-trk">Monza</div><div class="row-car">F Ulti Hyb G4</div><span class="tag tag-f1">F1</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCENE 4 — track intel (the interaction) ============ -->
+      <section id="s4" class="clip" data-start="11.5" data-duration="4" data-track-index="3">
+        <div class="stage">
+          <div class="sec-head">
+            <div>
+              <div class="ital sec-title">Track Intel</div>
+              <div class="sec-sub">Round 13 — Spa Historic 1970</div>
+            </div>
+          </div>
+          <div class="tbl">
+            <div class="row"><div class="row-ord mono">R12</div><div class="row-trk">Indianapolis Road</div><div class="row-car">German Group A</div><span class="tag tag-gt3">GT3</span></div>
+            <div id="s4-row" class="row"><div class="row-ord mono">R13</div><div class="row-trk">Spa Historic 1970</div><div class="row-car">F Vintage Cars 2</div><div style="display:flex;align-items:center;gap:22px"><span class="tag tag-f1">F1</span><span id="s4-chev" class="chev"></span></div></div>
+            <div id="s4-drawer" data-layout-allow-overflow="true">
+              <div id="s4-drawer-inner">
+                <div class="intel-f"><div class="intel-l">Length</div><div class="intel-v mono">14.12km</div></div>
+                <div class="intel-f"><div class="intel-l">Turns</div><div class="intel-v mono">20</div></div>
+                <div class="intel-f"><div class="intel-l">Type</div><div class="intel-v mono" style="font-style:italic">Historical</div></div>
+                <div class="intel-f"><div class="intel-l intel-note-l">Notes</div><div class="intel-note">Twice as long as modern Spa.</div></div>
+              </div>
+            </div>
+            <div class="row" style="border-bottom:none"><div class="row-ord mono">R14</div><div class="row-trk">Le Mans 24</div><div class="row-car">Stock Car 2023</div><span class="tag tag-endur">ENDUR</span></div>
+          </div>
+        </div>
+        <svg id="cursor" viewBox="0 0 24 24" fill="none">
+          <path d="M5 2.5 L5 20 L9.2 15.6 L12.2 21.8 L15 20.4 L12 14.4 L18.4 14.2 Z"
+                fill="#ffffff" stroke="#050505" stroke-width="1.2" stroke-linejoin="round" />
+        </svg>
+      </section>
+
+      <!-- ============ SCENE 5 — points ============ -->
+      <section id="s5" class="clip" data-start="15.5" data-duration="1.52" data-track-index="4">
+        <div class="stage">
+          <div id="s5-h" class="ital sec-title" style="margin-bottom:44px">Points System</div>
+          <div id="s5-grid">
+            <div class="pt is-p1"><div class="pt-p">P1</div><div class="pt-v mono">25</div></div>
+            <div class="pt"><div class="pt-p">P2</div><div class="pt-v mono">18</div></div>
+            <div class="pt"><div class="pt-p">P3</div><div class="pt-v mono">15</div></div>
+            <div class="pt"><div class="pt-p">P4</div><div class="pt-v mono">12</div></div>
+            <div class="pt"><div class="pt-p">P5</div><div class="pt-v mono">10</div></div>
+          </div>
+          <div id="s5-note" class="mono">Fastest Lap: +1 Point</div>
+        </div>
+      </section>
+
+      <!-- ============ SCENE 6 — outro slam ============ -->
+      <section id="s6" class="clip" data-start="17.02" data-duration="2.98" data-track-index="5">
+        <div class="stage">
+          <div id="s6-mark">AMS2</div>
+          <div id="s6-title" class="ital">Ant <span class="vs">vs</span> Bee</div>
+          <div id="s6-season">Season 1.0 · Pre-season build</div>
+          <div id="s6-last" class="mono">Lights out soon.</div>
+        </div>
+      </section>
+
+      <!-- ============ AUDIO ============ -->
+      <audio id="music" data-start="0" data-duration="20" data-track-index="10" data-volume="0.34"
+             src="assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3"></audio>
+
+      <audio id="sfx-ant"  data-start="0.5"  data-duration="0.06" data-track-index="11" data-volume="0.40" src="assets/sfx/ui/click2.ogg"></audio>
+      <audio id="sfx-bee"  data-start="1.0"  data-duration="0.06" data-track-index="12" data-volume="0.40" src="assets/sfx/ui/click2.ogg"></audio>
+
+      <audio id="sfx-card" data-start="3.52" data-duration="0.14" data-track-index="13" data-volume="0.50" src="assets/sfx/impact/impactSoft_medium_002.ogg"></audio>
+      <audio id="sfx-st1"  data-start="5.03" data-duration="0.01" data-track-index="14" data-volume="0.42" src="assets/sfx/interface/click_003.ogg"></audio>
+      <audio id="sfx-st2"  data-start="5.53" data-duration="0.01" data-track-index="15" data-volume="0.42" src="assets/sfx/interface/click_003.ogg"></audio>
+      <audio id="sfx-st3"  data-start="6.03" data-duration="0.01" data-track-index="16" data-volume="0.42" src="assets/sfx/interface/click_003.ogg"></audio>
+
+      <audio id="sfx-r1" data-start="8.02"  data-duration="0.01" data-track-index="17" data-volume="0.36" src="assets/sfx/interface/click_003.ogg"></audio>
+      <audio id="sfx-r2" data-start="8.52"  data-duration="0.01" data-track-index="18" data-volume="0.32" src="assets/sfx/interface/click_003.ogg"></audio>
+      <audio id="sfx-r3" data-start="9.02"  data-duration="0.01" data-track-index="19" data-volume="0.28" src="assets/sfx/interface/click_003.ogg"></audio>
+      <audio id="sfx-r4" data-start="9.52"  data-duration="0.01" data-track-index="20" data-volume="0.24" src="assets/sfx/interface/click_003.ogg"></audio>
+      <audio id="sfx-r5" data-start="10.02" data-duration="0.01" data-track-index="21" data-volume="0.20" src="assets/sfx/interface/click_003.ogg"></audio>
+      <audio id="sfx-r6" data-start="10.52" data-duration="0.01" data-track-index="22" data-volume="0.17" src="assets/sfx/interface/click_003.ogg"></audio>
+
+      <audio id="sfx-click"  data-start="12.52" data-duration="0.01" data-track-index="23" data-volume="0.60" src="assets/sfx/interface/click_005.ogg"></audio>
+      <audio id="sfx-slide"  data-start="12.62" data-duration="0.6" data-track-index="24" data-volume="0.40" src="assets/sfx/casino/card-slide-1.ogg"></audio>
+      <audio id="sfx-if1" data-start="12.90" data-duration="0.06" data-track-index="25" data-volume="0.26" src="assets/sfx/ui/click2.ogg"></audio>
+      <audio id="sfx-if2" data-start="13.05" data-duration="0.06" data-track-index="26" data-volume="0.26" src="assets/sfx/ui/click2.ogg"></audio>
+      <audio id="sfx-if3" data-start="13.20" data-duration="0.06" data-track-index="27" data-volume="0.26" src="assets/sfx/ui/click2.ogg"></audio>
+      <audio id="sfx-if4" data-start="13.35" data-duration="0.06" data-track-index="28" data-volume="0.26" src="assets/sfx/ui/click2.ogg"></audio>
+
+      <audio id="sfx-pts"  data-start="15.52" data-duration="0.14" data-track-index="29" data-volume="0.45" src="assets/sfx/impact/impactSoft_medium_002.ogg"></audio>
+      <audio id="sfx-slam" data-start="17.02" data-duration="1.48" data-track-index="30" data-volume="0.70" src="assets/sfx/impact/impactBell_heavy_000.ogg"></audio>
+    </div>
+
+    <script>
+      var tl = gsap.timeline({ paused: true });
+      var E = 'power3.out';
+
+      /* ---------------- Scene 1 — rivalry / the zeros (0 – 3.5) ---------------- */
+      tl.fromTo('#s1-panel', { opacity: 0, y: 26, scale: 0.985 },
+                             { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: E }, 0.15);
+      tl.fromTo('#s1-ant', { opacity: 0, x: -34 }, { opacity: 1, x: 0, duration: 0.5, ease: E }, 0.5);
+      tl.fromTo('#s1-bee', { opacity: 0, x: -34 }, { opacity: 1, x: 0, duration: 0.5, ease: E }, 1.0);
+      // hook line: settles by ~1.6s and holds 1.9s — above the sentence reading floor
+      tl.fromTo('#s1-hook', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: E }, 1.3);
+      tl.to('#s1-dot', { opacity: 0.25, duration: 0.45, repeat: 5, yoyo: true, ease: 'sine.inOut' }, 0.4);
+      tl.to(['#s1-panel', '#s1-hook'], { opacity: 0, duration: 0.3, ease: 'power2.in' }, 3.15);
+
+      /* ---------------- Scene 2 — Round 01 : Adelaide (3.5 – 7.5) ---------------- */
+      tl.fromTo('#s2-card', { opacity: 0, x: -46 }, { opacity: 1, x: 0, duration: 0.6, ease: E }, 3.52);
+      tl.fromTo('#s2-dot',   { opacity: 0 }, { opacity: 1, duration: 0.3 }, 3.62);
+      tl.fromTo('#s2-title', { opacity: 0, y: 40, scale: 0.97 },
+                             { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'power4.out' }, 4.02); // beat-grid: 4.02
+      tl.fromTo('#s2-sub',   { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: E }, 4.52); // beat-grid: 4.52
+      // three session stats on consecutive beats, then the full set holds ~1.4s
+      var stats = [
+        { sel: '.s2-stat:nth-child(1)', id: '#s2-n1', to: 20, at: 5.03 },  // beat-grid: 5.03
+        { sel: '.s2-stat:nth-child(2)', id: '#s2-n2', to: 10, at: 5.53 },  // beat-grid: 5.53
+        { sel: '.s2-stat:nth-child(3)', id: '#s2-n3', to: 30, at: 6.03 }   // beat-grid: 6.03
+      ];
+      stats.forEach(function (s) {
+        tl.fromTo(s.sel, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.4, ease: E }, s.at);
+        var box = { v: 0 };
+        tl.to(box, {
+          v: s.to, duration: 0.45, ease: 'power2.out',
+          onUpdate: function () { document.querySelector(s.id).textContent = Math.round(box.v); }
+        }, s.at);
+      });
+      tl.to('#s2-card', { opacity: 0, duration: 0.28, ease: 'power2.in' }, 7.2);
+
+      /* ---------------- Scene 3 — season calendar (7.5 – 11.5) ---------------- */
+      tl.fromTo('#s3-h', { opacity: 0, x: -26 }, { opacity: 1, x: 0, duration: 0.45, ease: E }, 7.55);
+      tl.fromTo('#s3-s', { opacity: 0 }, { opacity: 1, duration: 0.4 }, 7.7);
+      tl.fromTo('#s3-count', { opacity: 0 }, { opacity: 1, duration: 0.4 }, 7.85);
+      tl.fromTo('.tbl', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: E }, 7.6);
+      var rows = document.querySelectorAll('#s3-list .s3row');
+      for (var i = 0; i < rows.length; i++) {
+        // first six ride the beat grid (8.02 … 10.52); the rest accelerate to sell 20 rounds
+        var at = i < 6 ? 8.02 + i * 0.5 : 10.52 + (i - 5) * 0.075; // beat-grid: 8.02,8.52,9.02,9.52,10.02,10.52
+        tl.fromTo(rows[i], { opacity: 0, x: -28 },
+                           { opacity: 1, x: 0, duration: 0.34, ease: E }, at);
+      }
+      // the list scrolls under its own header — the length is the point
+      tl.to('#s3-list', { y: -360, duration: 1.05, ease: 'power2.inOut' }, 10.25);
+      tl.to('.tbl, .sec-head', { opacity: 0, duration: 0.26, ease: 'power2.in' }, 11.2);
+
+      /* ---------------- Scene 4 — track intel : the interaction (11.5 – 15.5) ---------------- */
+      tl.set('.tbl, .sec-head', { opacity: 1 }, 11.5);
+      tl.fromTo('#s4 .sec-head', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.4, ease: E }, 11.55);
+      tl.fromTo('#s4 .tbl', { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.45, ease: E }, 11.6);
+      // cursor travels to the Spa row and presses
+      tl.set('#cursor', { x: 1180, y: 830, opacity: 0 }, 11.5);
+      tl.to('#cursor', { opacity: 1, duration: 0.25 }, 11.8);
+      tl.to('#cursor', { x: 700, y: 556, duration: 0.62, ease: 'power2.inOut' }, 11.9);
+      tl.to('#cursor', { scale: 0.86, duration: 0.09, yoyo: true, repeat: 1, ease: 'power2.out' }, 12.52); // beat-grid: 12.52
+      // the row goes active, the chevron rotates, the drawer opens
+      tl.to('#s4-row', { backgroundColor: '#181818', borderLeftColor: '#ff3e3e', duration: 0.22, ease: E }, 12.52);
+      tl.to('#s4-chev', { rotation: 180, duration: 0.34, ease: E }, 12.55);
+      tl.to('#s4-drawer', { height: 176, duration: 0.42, ease: 'power3.inOut' }, 12.6);
+      tl.to('#cursor', { opacity: 0, duration: 0.3 }, 13.0);
+      // four intel fields arrive fast as a set, then hold ~1.8s (the Notes sentence gets the longest read)
+      var fields = document.querySelectorAll('#s4-drawer-inner .intel-f');
+      for (var j = 0; j < fields.length; j++) {
+        tl.fromTo(fields[j], { opacity: 0, y: 14 },
+                             { opacity: 1, y: 0, duration: 0.3, ease: E }, 12.9 + j * 0.15);
+      }
+      tl.to('#s4 .stage', { opacity: 0, duration: 0.26, ease: 'power2.in' }, 15.2);
+
+      /* ---------------- Scene 5 — points (15.5 – 17.02) ---------------- */
+      tl.fromTo('#s5-h', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.3, ease: E }, 15.52);
+      var tiles = document.querySelectorAll('#s5-grid .pt');
+      for (var k = 0; k < tiles.length; k++) {
+        tl.fromTo(tiles[k], { opacity: 0, y: 26, scale: 0.94 },
+                            { opacity: 1, y: 0, scale: 1, duration: 0.32, ease: 'back.out(1.6)' }, 15.52 + k * 0.07);
+      }
+      // micro-label settles ~16.1 and holds to the 17.02 cut — above the short-label floor
+      tl.fromTo('#s5-note', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.3, ease: E }, 15.9);
+
+      /* ---------------- Scene 6 — outro slam (17.02 – 20.0) ---------------- */
+      // beat-locked: 17.02s strong cue — hard cut to black, the mark slams in
+      tl.fromTo('#s6-mark', { opacity: 0, scale: 1.5 },
+                            { opacity: 1, scale: 1, duration: 0.34, ease: 'power4.out' }, 17.02);
+      tl.fromTo('#s6-title', { opacity: 0, y: 44, scale: 0.96 },
+                             { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'power4.out' }, 17.5);
+      tl.fromTo('#s6-season', { opacity: 0 }, { opacity: 1, duration: 0.4, ease: E }, 18.02);
+      // beat-locked: 18.52s strong cue — the last line, holds 1.4s
+      tl.fromTo('#s6-last', { opacity: 0, y: 18, scale: 0.97 },
+                            { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: E }, 18.52);
+      tl.to('#s6 .stage', { opacity: 0, duration: 0.32, ease: 'power2.in' }, 19.6);
+
+      /* ---------------- music fades ---------------- */
+      var music = document.getElementById('music');
+      tl.fromTo(music, { volume: 0 }, { volume: 0.34, duration: 0.6, ease: 'none' }, 0);
+      tl.to(music, { volume: 0, duration: 0.35, ease: 'none' }, 19.65);
+
+      /* ---------------- audio-reactive : subtle, non-text ---------------- */
+      /* bass drives the red accent glow (live dots, hero card edge); overall energy
+         breathes the background vignette. No waveform / equalizer visuals. */
+      (function () {
+        if (typeof AUDIO_DATA === 'undefined') return;
+        var docEl = document.documentElement;
+        var n = AUDIO_DATA.totalFrames;
+        for (var f = 0; f < n; f++) {
+          tl.call(
+            (function (row) {
+              return function () {
+                docEl.style.setProperty('--bass', row[0].toFixed(3));
+                docEl.style.setProperty('--overall', row[2].toFixed(3));
+              };
+            })(AUDIO_DATA.frames[f]),
+            [],
+            f / AUDIO_DATA.fps
+          );
+        }
+      })();
+
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
