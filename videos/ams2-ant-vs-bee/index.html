@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #000;
+      }
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0F0F0F;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="46.294"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div
+        id="el-01-nothing-scored-yet"
+        class="scene"
+        data-composition-id="01-nothing-scored-yet"
+        data-composition-src="compositions/frames/01-nothing-scored-yet.html"
+        data-start="0"
+        data-duration="5.423"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-01-nothing-scored-yet-voice"
+        src="assets/voice/01.wav"
+        data-start="0"
+        data-duration="5.423"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-02-round-01-adelaide"
+        class="scene"
+        data-composition-id="02-round-01-adelaide"
+        data-composition-src="compositions/frames/02-round-01-adelaide.html"
+        data-start="5.423"
+        data-duration="5.251"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-02-round-01-adelaide-voice"
+        src="assets/voice/02.wav"
+        data-start="5.423"
+        data-duration="5.251"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-03-twenty-rounds"
+        class="scene"
+        data-composition-id="03-twenty-rounds"
+        data-composition-src="compositions/frames/03-twenty-rounds.html"
+        data-start="10.674"
+        data-duration="5.705"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-03-twenty-rounds-voice"
+        src="assets/voice/03.wav"
+        data-start="10.674"
+        data-duration="5.705"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-04-monaco"
+        class="scene"
+        data-composition-id="04-monaco"
+        data-composition-src="compositions/frames/04-monaco.html"
+        data-start="16.378999999999998"
+        data-duration="5.884"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-04-monaco-voice"
+        src="assets/voice/04.wav"
+        data-start="16.378999999999998"
+        data-duration="5.884"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-05-the-long-ones"
+        class="scene"
+        data-composition-id="05-the-long-ones"
+        data-composition-src="compositions/frames/05-the-long-ones.html"
+        data-start="22.262999999999998"
+        data-duration="8.095"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-05-the-long-ones-voice"
+        src="assets/voice/05.wav"
+        data-start="22.262999999999998"
+        data-duration="8.095"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-06-corkscrew-and-temple"
+        class="scene"
+        data-composition-id="06-corkscrew-and-temple"
+        data-composition-src="compositions/frames/06-corkscrew-and-temple.html"
+        data-start="30.357999999999997"
+        data-duration="6.368"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-06-corkscrew-and-temple-voice"
+        src="assets/voice/06.wav"
+        data-start="30.357999999999997"
+        data-duration="6.368"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-07-two-cars"
+        class="scene"
+        data-composition-id="07-two-cars"
+        data-composition-src="compositions/frames/07-two-cars.html"
+        data-start="36.726"
+        data-duration="4.961"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-07-two-cars-voice"
+        src="assets/voice/07.wav"
+        data-start="36.726"
+        data-duration="4.961"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <div
+        id="el-08-lights-out-soon"
+        class="scene"
+        data-composition-id="08-lights-out-soon"
+        data-composition-src="compositions/frames/08-lights-out-soon.html"
+        data-start="41.687"
+        data-duration="4.607"
+        data-track-index="1"
+      ></div>
+      <audio
+        id="el-08-lights-out-soon-voice"
+        src="assets/voice/08.wav"
+        data-start="41.687"
+        data-duration="4.607"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+
+      <audio
+        id="el-bgm-bed"
+        src="assets/music/bed.mp3"
+        data-start="0"
+        data-duration="46.294"
+        data-track-index="11"
+        data-volume="0.34"
+      ></audio>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+      var bed = document.getElementById("el-bgm-bed");
+      var tl = window.__timelines["main"];
+      tl.fromTo(bed, { volume: 0 }, { volume: 0.34, duration: 1.1, ease: "none" }, 0);
+      tl.to(bed, { volume: 0.17, duration: 0.35, ease: "none" }, 0.05);   // duck under line 1
+      tl.to(bed, { volume: 0.34, duration: 0.40, ease: "none" }, 5.123);
+      tl.to(bed, { volume: 0.17, duration: 0.35, ease: "none" }, 4.973);   // duck under line 2
+      tl.to(bed, { volume: 0.34, duration: 0.40, ease: "none" }, 10.374);
+      tl.to(bed, { volume: 0.17, duration: 0.35, ease: "none" }, 10.224);   // duck under line 3
+      tl.to(bed, { volume: 0.34, duration: 0.40, ease: "none" }, 16.079);
+      tl.to(bed, { volume: 0.17, duration: 0.35, ease: "none" }, 15.929);   // duck under line 4
+      tl.to(bed, { volume: 0.34, duration: 0.40, ease: "none" }, 21.963);
+      tl.to(bed, { volume: 0.17, duration: 0.35, ease: "none" }, 21.813);   // duck under line 5
+      tl.to(bed, { volume: 0.34, duration: 0.40, ease: "none" }, 30.058);
+      tl.to(bed, { volume: 0.17, duration: 0.35, ease: "none" }, 29.908);   // duck under line 6
+      tl.to(bed, { volume: 0.34, duration: 0.40, ease: "none" }, 36.426);
+      tl.to(bed, { volume: 0.17, duration: 0.35, ease: "none" }, 36.276);   // duck under line 7
+      tl.to(bed, { volume: 0.34, duration: 0.40, ease: "none" }, 41.387);
+      tl.to(bed, { volume: 0.17, duration: 0.35, ease: "none" }, 41.237);   // duck under line 8
+      tl.to(bed, { volume: 0.34, duration: 0.40, ease: "none" }, 45.994);
+      tl.to(bed, { volume: 0, duration: 1.4, ease: "none" }, 44.844);
+    </script>
+  </body>
+</html>

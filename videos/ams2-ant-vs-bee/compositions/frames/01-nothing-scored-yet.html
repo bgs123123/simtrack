@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /></head>
+<body>
+<template>
+<div id="root" data-composition-id="01-nothing-scored-yet" data-width="1920" data-height="1080" data-duration="5.423">
+  <link rel="stylesheet" href="assets/fonts/fonts.css" />
+  <style>
+    #f01-wrap, #root { width: 100%; height: 100%; }
+    .f01-bg { position:absolute; inset:0; background:#050505; overflow:hidden; }
+    .f01-plate { position:absolute; top:0; left:0; width:1920px; height:1080px;
+                    transform-origin: 0 0; will-change: transform; }
+    .f01-plate img { display:block; width:1920px; height:1080px; }
+    .f01-dim img { filter: brightness(0.55) saturate(0.85); }
+    .f01-vig { position:absolute; inset:0; pointer-events:none;
+                  background: radial-gradient(ellipse at 50% 50%, rgba(5,5,5,0) 38%, rgba(5,5,5,0.62) 100%); }
+    .f01-mono { font-family:'JetBrains Mono', monospace; }
+    .f01-ital { font-family:'Inter', sans-serif; font-weight:900; font-style:italic;
+                   text-transform:uppercase; letter-spacing:-0.04em; }
+  </style>
+  <div class="f01-bg">
+    <div class="f01-plate f01-dim" id="f01-dim" style="">
+      <img src="assets/screens/scroll-000.png" alt="" />
+    </div>
+    <div class="f01-plate"  id="f01-lit" style="clip-path: inset(0% 100% 0% 0%);">
+      <img src="assets/screens/scroll-000.png" alt="" />
+    </div>
+  </div>
+  <div class="f01-vig"></div>
+  <script>
+    (function () {
+      var tl = gsap.timeline({ paused: true });
+      tl.set("#f01-dim", { x: -1872.1, y: -160.1, scale: 2.05 }, 0);
+      tl.set("#f01-lit", { x: -1872.1, y: -160.1, scale: 2.05 }, 0);
+      tl.fromTo("#f01-dim", { scale: 2.05, opacity: 0 }, { scale: 2.05, opacity: 1, duration: 0.45, ease: "none" }, 0);
+      tl.to("#f01-dim",  { scale: 2.0999999999999996, duration: 5.423, ease: "none" }, 0);
+      tl.to("#f01-lit",  { scale: 2.0999999999999996, duration: 5.423, ease: "none" }, 0);
+      tl.fromTo("#f01-lit", { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "power2.inOut" }, 0.55);
+      window.__timelines["01-nothing-scored-yet"] = tl;
+    })();
+  </script>
+</div>
+</template>
+</body>
+</html>

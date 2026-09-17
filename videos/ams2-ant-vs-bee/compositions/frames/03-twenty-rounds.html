@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /></head>
+<body>
+<template>
+<div id="root" data-composition-id="03-twenty-rounds" data-width="1920" data-height="1080" data-duration="5.705">
+  <link rel="stylesheet" href="assets/fonts/fonts.css" />
+  <style>
+    #f03-wrap, #root { width: 100%; height: 100%; }
+    .f03-bg { position:absolute; inset:0; background:#050505; overflow:hidden; }
+    .f03-plate { position:absolute; top:0; left:0; width:1920px; height:4766px;
+                    transform-origin: 0 0; will-change: transform; }
+    .f03-plate img { display:block; width:1920px; height:4766px; }
+    .f03-dim img { filter: brightness(0.55) saturate(0.85); }
+    .f03-vig { position:absolute; inset:0; pointer-events:none;
+                  background: radial-gradient(ellipse at 50% 50%, rgba(5,5,5,0) 38%, rgba(5,5,5,0.62) 100%); }
+    .f03-mono { font-family:'JetBrains Mono', monospace; }
+    .f03-ital { font-family:'Inter', sans-serif; font-weight:900; font-style:italic;
+                   text-transform:uppercase; letter-spacing:-0.04em; }
+  </style>
+  <div class="f03-bg" data-layout-allow-overflow="true">
+    <div class="f03-plate f03-dim" id="f03-dim" style="">
+      <img src="assets/screens/full-page.png" alt="" />
+    </div>
+    <div class="f03-plate"  id="f03-lit" style="clip-path: inset(0% 100% 0% 0%);">
+      <img src="assets/screens/full-page.png" alt="" />
+    </div>
+  </div>
+  <div class="f03-vig"></div>
+  <div id="f03-count" class="f03-mono" style="position:absolute; right:74px; bottom:64px;
+       font-size:22px; font-weight:700; letter-spacing:0.3em; text-transform:uppercase; color:#d4d4d4;">
+    <span id="f03-num">01</span> / 20 ROUNDS</div>
+  <script>
+    (function () {
+      var tl = gsap.timeline({ paused: true });
+      tl.set("#f03-dim", { x: 96.0, y: -700.7, scale: 0.9 }, 0);
+      tl.set("#f03-lit", { x: 96.0, y: -700.7, scale: 0.9 }, 0);
+      tl.set("#f03-lit", { clipPath: "inset(0% 0% 0% 0%)" }, 0);
+      tl.fromTo(["#f03-dim", "#f03-lit"], { y: -700.7 },
+                { y: -1034.1, duration: 4.91, ease: "power1.inOut" }, 0.35);
+      var counter = { v: 1 };
+      tl.to(counter, { v: 20, duration: 4.3, ease: "power1.inOut",
+        onUpdate: function () {
+          document.getElementById("f03-num").textContent = String(Math.round(counter.v)).padStart(2, "0");
+        } }, 0.5);
+      tl.fromTo("#f03-count", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 0.3);
+      window.__timelines["03-twenty-rounds"] = tl;
+    })();
+  </script>
+</div>
+</template>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /></head>
+<body>
+<template>
+<div id="root" data-composition-id="04-monaco" data-width="1920" data-height="1080" data-duration="5.884">
+  <link rel="stylesheet" href="assets/fonts/fonts.css" />
+  <style>
+    #f04-wrap, #root { width: 100%; height: 100%; }
+    .f04-bg { position:absolute; inset:0; background:#050505; overflow:hidden; }
+    .f04-plate { position:absolute; top:0; left:0; width:1920px; height:1080px;
+                    transform-origin: 0 0; will-change: transform; }
+    .f04-plate img { display:block; width:1920px; height:1080px; }
+    .f04-dim img { filter: brightness(0.55) saturate(0.85); }
+    .f04-vig { position:absolute; inset:0; pointer-events:none;
+                  background: radial-gradient(ellipse at 50% 50%, rgba(5,5,5,0) 38%, rgba(5,5,5,0.62) 100%); }
+    .f04-mono { font-family:'JetBrains Mono', monospace; }
+    .f04-ital { font-family:'Inter', sans-serif; font-weight:900; font-style:italic;
+                   text-transform:uppercase; letter-spacing:-0.04em; }
+  </style>
+  <div class="f04-bg">
+    <div class="f04-plate f04-dim" id="f04-dim" style="">
+      <img src="assets/screens/intel-monaco.png" alt="" />
+    </div>
+    <div class="f04-plate"  id="f04-lit" style="clip-path: inset(0% 100% 0% 0%);">
+      <img src="assets/screens/intel-monaco.png" alt="" />
+    </div>
+  </div>
+  <div class="f04-vig"></div>
+  <script>
+    (function () {
+      var tl = gsap.timeline({ paused: true });
+      tl.set("#f04-dim", { x: -336.0, y: -261.9, scale: 1.35 }, 0);
+      tl.set("#f04-lit", { x: -336.0, y: -261.9, scale: 1.35 }, 0);
+      tl.to(["#f04-dim", "#f04-lit"], { scale: 1.4000000000000001, duration: 5.884, ease: "none" }, 0);
+      tl.to("#f04-lit", { clipPath: "inset(0% 62% 0% 0%)", duration: 0.8, ease: "power2.inOut" }, 0.45);
+      tl.to("#f04-lit", { clipPath: "inset(0% 38% 0% 0%)", duration: 0.9, ease: "power2.inOut" }, 1.9);
+      tl.to("#f04-lit", { clipPath: "inset(0% 14% 0% 0%)", duration: 0.9, ease: "power2.inOut" }, 2.9);
+      tl.to("#f04-lit", { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: "power2.inOut" }, 3.9);
+      window.__timelines["04-monaco"] = tl;
+    })();
+  </script>
+</div>
+</template>
+</body>
+</html>

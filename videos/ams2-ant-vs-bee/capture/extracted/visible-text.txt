@@ -1,0 +1,311 @@
+[span] Season 1.0
+[a] Live View
+[a] Season Calendar
+[a] Standings
+[span] Next Event: Round 01
+[h2] Adelaide
+[p] Porsche 911 •
+[span] The Season Opener
+[p] Practice
+[p] Qualifying
+[p] Race
+[p] Rivalry Status
+[span] ANT
+[span] BEE
+[h3] Season Calendar
+[p] Click race for track intel
+[span] F1 (20/10/30)
+[span] GT3 R (20/10/30)
+[span] ENDUR (20/10/45)
+[span] SPRNT (20/5/15)
+[th] Order
+[th] Circuit
+[th] Vehicle Class
+[th] Format
+[th] Intel
+[td] R01
+[div] Adelaide
+[td] Porsche 911
+[span] GT3
+[p] Length
+[p] 3.22km
+[p] Turns
+[p] Type
+[p] Street
+[p] Notes
+[p] High-speed street circuit with punishing turn 8 wall.
+[td] R02
+[div] Bathurst Historic
+[td] F Vintage G1
+[p] Length
+[p] 6.21km
+[p] Turns
+[p] Type
+[p] Hybrid
+[p] Notes
+[p] The mountain straight and winding descent are legendary.
+[td] R03
+[div] Monaco (Azure)
+[td] F Classic G2
+[p] Length
+[p] 3.33km
+[p] Turns
+[p] Type
+[p] Street
+[p] Notes
+[p] Tightest circuit in the world. Passing is nearly impossible.
+[td] R04
+[div] Cascavel
+[td] Copa Truck
+[span] SPRNT
+[p] Length
+[p] 3.05km
+[p] Turns
+[p] Type
+[p] Technical
+[p] Notes
+[p] Fast banking turn 1 is the main highlight.
+[td] R05
+[div] Interlagos
+[td] F Ulti Hyb G4
+[p] Length
+[p] 4.31km
+[p] Turns
+[p] Type
+[p] Notes
+[p] Anti-clockwise layout with elevation changes.
+[td] R06
+[div] Barcelona GP
+[td] F Ulti Hyb G4
+[p] Length
+[p] 4.67km
+[p] Turns
+[p] Type
+[p] Notes
+[p] High-speed corners test aerodynamic efficiency.
+[td] R07
+[div] Imola Hist 88
+[td] F Classic G4
+[p] Length
+[p] 4.91km
+[p] Turns
+[p] Type
+[p] Classic GP
+[p] Notes
+[p] Historic layout without modern chicane additions.
+[td] R08
+[div] Daytona Road
+[td] GT3
+[span] ENDUR
+[p] Length
+[p] 5.73km
+[p] Turns
+[p] Type
+[p] Roval
+[p] Notes
+[p] High banking meets a technical infield.
+[td] R09
+[div] Silverstone
+[td] Coppa Fusca
+[span] SPRNT
+[p] Length
+[p] 5.89km
+[p] Turns
+[p] Type
+[p] Notes
+[p] The home of British motor racing.
+[td] R10
+[div] Hockenheim Ring
+[td] GT3
+[span] GT3
+[p] Length
+[p] 4.57km
+[p] Turns
+[p] Type
+[p] Notes
+[p] The stadium section is incredibly technical.
+[td] R11
+[div] Indianapolis Oval
+[td] F Junior
+[p] Length
+[p] 4.02km
+[p] Turns
+[p] Type
+[p] Oval
+[p] Notes
+[p] Pure speed. Drafting is the only way to win.
+[td] R12
+[div] Indianapolis Road
+[td] German Group A
+[span] GT3
+[p] Length
+[p] 4.19km
+[p] Turns
+[p] Type
+[p] Roval
+[p] Notes
+[p] Uses the main oval banking in reverse.
+[td] R13
+[div] Spa Historic 1970
+[td] F Vintage Cars 2
+[p] Length
+[p] 14.12km
+[p] Turns
+[p] Type
+[p] Historical
+[p] Notes
+[p] Twice as long as modern Spa.
+[td] R14
+[div] Le Mans 24
+[td] Stock Car 2023
+[span] ENDUR
+[p] Length
+[p] 13.63km
+[p] Turns
+[p] Type
+[p] Endurance
+[p] Notes
+[p] Home of the famous 24-hour race.
+[td] R15
+[div] Suzuka (Kanzai)
+[td] F V10 G2
+[p] Length
+[p] 5.81km
+[p] Turns
+[p] Type
+[p] Notes
+[p] Unique figure-eight layout with the 130R corner.
+[td] R16
+[div] Kyalami Historic
+[td] Fusca Hot
+[span] SPRNT
+[p] Length
+[p] 4.10km
+[p] Turns
+[p] Type
+[p] Classic
+[p] Notes
+[p] Fast and flowing layout in South Africa.
+[td] R17
+[div] Laguna Seca
+[td] GT3
+[span] GT3
+[p] Length
+[p] 3.60km
+[p] Turns
+[p] Type
+[p] Notes
+[p] Features the 'Corkscrew' - a 5-story drop.
+[td] R18
+[div] Montreal
+[td] F V8 Gen 3
+[p] Length
+[p] 4.36km
+[p] Turns
+[p] Type
+[p] Street/GP
+[p] Notes
+[p] Famous for the 'Wall of Champions'.
+[td] R19
+[div] Sebring
+[td] GT Classics
+[span] ENDUR
+[p] Length
+[p] 6.02km
+[p] Turns
+[p] Type
+[p] Road
+[p] Notes
+[p] Extremely bumpy concrete track surface.
+[td] R20
+[div] Monza
+[td] F Ulti Hyb G4
+[p] Length
+[p] 5.79km
+[p] Turns
+[p] Type
+[p] Notes
+[p] The Temple of Speed.
+[h3] Live Results Tracker
+[p] Championship Point Progress
+[th] Rnd
+[th] Track
+[th] Ant
+[span] q / p / pts
+[th] Bee
+[span] q / p / pts
+[th] Delta
+[td] Adelaide
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Bathurst Historic
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Monaco (Azure)
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Cascavel
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Interlagos
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Barcelona GP
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Imola Hist 88
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Daytona Road
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Silverstone
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Hockenheim Ring
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Indianapolis Oval
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Indianapolis Road
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Spa Historic 1970
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Le Mans 24
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Suzuka (Kanzai)
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Kyalami Historic
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Laguna Seca
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Montreal
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Sebring
+[td] -- / -- / 0
+[td] -- / -- / 0
+[td] Monza
+[td] -- / -- / 0
+[td] -- / -- / 0
+[h4] Session Formats
+[span] F1 Style
+[span] 20P / 10Q / 30R
+[span] GT3 R Style
+[span] 20P / 10Q / 30R
+[span] Endurance
+[span] 20P / 10Q / 45R
+[span] Sprint
+[span] 20P / 5Q1 / 15R1 / 5Q2 / 15R2
+[h4] Points System
+[span] P10
+[p] Fastest Lap: +1 Point
+[p] Race Control • AMS2 Ant vs Bee v1.2
+[p] PRE-SEASON BUILD

@@ -1,0 +1,5 @@
+# Review artifacts — regenerate with: npx hyperframes snapshot --at <times>
+snapshots/
+
+# Already committed once under .claude/skills/brag/assets/music/ — see README.md
+assets/music/bed.mp3

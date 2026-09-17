@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /></head>
+<body>
+<template>
+<div id="root" data-composition-id="02-round-01-adelaide" data-width="1920" data-height="1080" data-duration="5.251">
+  <link rel="stylesheet" href="assets/fonts/fonts.css" />
+  <style>
+    #f02-wrap, #root { width: 100%; height: 100%; }
+    .f02-bg { position:absolute; inset:0; background:#050505; overflow:hidden; }
+    .f02-plate { position:absolute; top:0; left:0; width:1920px; height:1080px;
+                    transform-origin: 0 0; will-change: transform; }
+    .f02-plate img { display:block; width:1920px; height:1080px; }
+    .f02-dim img { filter: brightness(0.55) saturate(0.85); }
+    .f02-vig { position:absolute; inset:0; pointer-events:none;
+                  background: radial-gradient(ellipse at 50% 50%, rgba(5,5,5,0) 38%, rgba(5,5,5,0.62) 100%); }
+    .f02-mono { font-family:'JetBrains Mono', monospace; }
+    .f02-ital { font-family:'Inter', sans-serif; font-weight:900; font-style:italic;
+                   text-transform:uppercase; letter-spacing:-0.04em; }
+  </style>
+  <div class="f02-bg">
+    <div class="f02-plate f02-dim" id="f02-dim" style="">
+      <img src="assets/screens/scroll-000.png" alt="" />
+    </div>
+    <div class="f02-plate"  id="f02-lit" style="clip-path: inset(0% 100% 0% 0%);">
+      <img src="assets/screens/scroll-000.png" alt="" />
+    </div>
+  </div>
+  <div class="f02-vig"></div>
+  <div id="f02-rule" style="position:absolute; left:59%; top:74.5%; width:9.5%; height:4px;
+       background:#ff3e3e; transform-origin:0 50%;"></div>
+  <script>
+    (function () {
+      var tl = gsap.timeline({ paused: true });
+      tl.set("#f02-dim", { x: -201.7, y: 10.7, scale: 1.55 }, 0);
+      tl.set("#f02-lit", { x: -201.7, y: 10.7, scale: 1.55 }, 0);
+      tl.set("#f02-lit", { clipPath: "inset(0% 0% 0% 0%)" }, 0);
+      tl.to("#f02-dim", { scale: 1.62, duration: 5.251, ease: "none" }, 0);
+      tl.to("#f02-lit", { scale: 1.62, duration: 5.251, ease: "none" }, 0);
+      tl.fromTo("#f02-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: "power3.out" }, 3.6);
+      window.__timelines["02-round-01-adelaide"] = tl;
+    })();
+  </script>
+</div>
+</template>
+</body>
+</html>

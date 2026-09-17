@@ -1,0 +1,1286 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<style>
+        :root {
+            --brand-red: #ff3e3e;
+            --bg-deep: #050505;
+            --surface: #0f0f0f;
+            --border: #1f1f1f;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #f0f0f0;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .glass-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+        }
+
+        .race-row {
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .race-row:hover {
+            background: #141414;
+        }
+
+        .race-row.active {
+            border-left: 4px solid var(--brand-red);
+            background: #181818;
+        }
+
+        .format-tag {
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            padding: 2px 10px;
+            border-radius: 2px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .intel-drawer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #0a0a0a;
+        }
+
+        .intel-drawer.open {
+            max-height: 500px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--brand-red); }
+
+        .sticky-nav {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: rgba(5, 5, 5, 0.85);
+        }
+    </style>
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2JL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa0ZL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2ZL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+1F00-1FFF;
+}
+/* greek */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1pL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa2pL7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa25L7W0Q5n-wU.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(assets/fonts/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx3cwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxTcwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* greek */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxPcwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx_cwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPx7cwgknk-6nFg.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(assets/fonts/tDbv2o-flEEny0FZhsfKu5WU4zr3E_BX0PnT8RD8yKwBNntkaToggR7BYRbKPxDcwgknk-4.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<script src="lucide.min.js"></script>
+</head>
+<body>
+
+
+    <nav class="sticky-nav sticky top-0 z-50 border-b border-neutral-800" style="">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <div class="bg-red-600 text-white px-3 py-1 font-black italic text-sm tracking-tighter">AMS2</div>
+                <div class="h-8 w-[1px] bg-neutral-800"></div>
+                <h1 class="text-xl font-bold tracking-tighter uppercase italic">Ant <span class="text-neutral-500 font-normal">vs</span> Bee <span class="text-neutral-600 ml-2 font-normal text-xs uppercase mono tracking-widest hidden sm:inline">Season 1.0</span></h1>
+            </div>
+            <div class="hidden md:flex gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                <a href="#dashboard" class="hover:text-white transition-colors">Live View</a>
+                <a href="#calendar" class="hover:text-white transition-colors">Season Calendar</a>
+                <a href="#standings" class="hover:text-white transition-colors">Standings</a>
+                <a href="#regulations" class="hover:text-white transition-colors">Rules</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 py-12 space-y-32">
+
+        <!-- DASHBOARD SECTION -->
+        <section id="dashboard" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-8 relative overflow-hidden glass-panel p-12 rounded-2xl group border-l-4 border-l-red-600">
+                <div class="absolute top-0 right-0 p-12 opacity-[0.02] group-hover:opacity-[0.04] transition-opacity">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="timer" class="lucide lucide-timer w-80 h-80"><line x1="10" x2="14" y1="2" y2="2"></line><line x1="12" x2="15" y1="14" y2="11"></line><circle cx="12" cy="14" r="8"></circle></svg>
+                </div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-8">
+                        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-red-500">Next Event: Round 01</span>
+                    </div>
+                    <h2 class="text-7xl font-black italic uppercase tracking-tighter mb-4">Adelaide</h2>
+                    <p class="text-2xl text-neutral-400 font-light uppercase tracking-widest mb-12">Porsche 911 • <span class="text-white text-lg italic">The Season Opener</span></p>
+                    
+                    <div class="grid grid-cols-3 gap-8 border-t border-neutral-800 pt-12">
+                        <div>
+                            <p class="text-[10px] font-bold text-neutral-500 uppercase mb-3">Practice</p>
+                            <p class="mono text-3xl font-bold">20<span class="text-sm font-normal text-neutral-600">M</span></p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-neutral-500 uppercase mb-3">Qualifying</p>
+                            <p class="mono text-3xl font-bold">10<span class="text-sm font-normal text-neutral-600">M</span></p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-bold text-neutral-500 uppercase mb-3 text-red-500">Race</p>
+                            <p class="mono text-3xl font-bold text-red-500">30<span class="text-sm font-normal text-red-900">M</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-4 flex flex-col gap-8">
+                <div class="glass-panel p-10 rounded-2xl flex-1 flex flex-col justify-center">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-neutral-500 mb-10 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="swords" class="lucide lucide-swords w-3 h-3 text-red-500"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"></polyline><line x1="13" x2="19" y1="19" y2="13"></line><line x1="16" x2="20" y1="16" y2="20"></line><line x1="19" x2="21" y1="21" y2="19"></line><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"></polyline><line x1="5" x2="9" y1="14" y2="18"></line><line x1="7" x2="4" y1="17" y2="20"></line><line x1="3" x2="5" y1="19" y2="21"></line></svg> Rivalry Status
+                    </p>
+                    <div class="space-y-10">
+                        <div class="flex items-center justify-between">
+                            <span class="text-3xl font-black italic text-neutral-200">ANT</span>
+                            <span class="mono text-5xl font-bold tracking-tighter">00</span>
+                        </div>
+                        <div class="h-[1px] bg-neutral-800 w-full"></div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-3xl font-black italic text-red-500">BEE</span>
+                            <span class="mono text-5xl font-bold text-red-500 tracking-tighter">00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEASON CALENDAR SECTION -->
+        <section id="calendar" class="space-y-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-neutral-800 pb-8">
+                <div>
+                    <h3 class="text-4xl font-black italic uppercase tracking-tighter">Season Calendar</h3>
+                    <p class="text-neutral-500 text-sm uppercase tracking-[0.3em] mt-2">Click race for track intel</p>
+                </div>
+                <div class="flex flex-wrap gap-4">
+                    <div class="bg-neutral-900 px-3 py-1.5 rounded flex items-center gap-3 border border-neutral-800">
+                        <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-neutral-300">F1 (20/10/30)</span>
+                    </div>
+                    <div class="bg-neutral-900 px-3 py-1.5 rounded flex items-center gap-3 border border-neutral-800">
+                        <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-neutral-300">GT3 R (20/10/30)</span>
+                    </div>
+                    <div class="bg-neutral-900 px-3 py-1.5 rounded flex items-center gap-3 border border-neutral-800">
+                        <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-neutral-300">ENDUR (20/10/45)</span>
+                    </div>
+                    <div class="bg-neutral-900 px-3 py-1.5 rounded flex items-center gap-3 border border-neutral-800">
+                        <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-neutral-300">SPRNT (20/5/15)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl overflow-hidden border border-neutral-800">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-neutral-900/80 text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 border-b border-neutral-800">
+                                <th class="p-6 w-24">Order</th>
+                                <th class="p-6">Circuit</th>
+                                <th class="p-6">Vehicle Class</th>
+                                <th class="p-6">Format</th>
+                                <th class="p-6 text-right">Intel</th>
+                            </tr>
+                        </thead>
+                        <tbody id="calendar-body"><tr class="race-row" id="row-1">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R01</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Adelaide</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">Porsche 911</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-cyan-600/10 text-cyan-400 border border-cyan-400/20">GT3</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-1" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-1" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">3.22km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">14</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Street</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">High-speed street circuit with punishing turn 8 wall.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-2">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R02</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Bathurst Historic</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F Vintage G1</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-2" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-2" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">6.21km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">23</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Hybrid</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">The mountain straight and winding descent are legendary.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-3">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R03</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Monaco (Azure)</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F Classic G2</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-3" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-3" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">3.33km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">19</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Street</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Tightest circuit in the world. Passing is nearly impossible.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-4">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R04</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Cascavel</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">Copa Truck</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-purple-600/10 text-purple-400 border border-purple-400/20">SPRNT</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-4" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-4" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">3.05km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">9</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Technical</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Fast banking turn 1 is the main highlight.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-5">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R05</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Interlagos</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F Ulti Hyb G4</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-5" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-5" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">4.31km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">15</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">GP</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Anti-clockwise layout with elevation changes.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-6">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R06</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Barcelona GP</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F Ulti Hyb G4</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-6" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-6" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">4.67km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">16</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">GP</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">High-speed corners test aerodynamic efficiency.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-7">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R07</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Imola Hist 88</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F Classic G4</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-7" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-7" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">4.91km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">22</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Classic GP</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Historic layout without modern chicane additions.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-8">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R08</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Daytona Road</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">GT3</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-yellow-600/10 text-yellow-500 border border-yellow-500/20">ENDUR</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-8" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-8" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">5.73km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">12</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Roval</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">High banking meets a technical infield.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-9">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R09</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Silverstone</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">Coppa Fusca</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-purple-600/10 text-purple-400 border border-purple-400/20">SPRNT</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-9" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-9" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">5.89km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">18</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">GP</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">The home of British motor racing.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-10">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R10</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Hockenheim Ring</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">GT3</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-cyan-600/10 text-cyan-400 border border-cyan-400/20">GT3</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-10" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-10" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">4.57km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">17</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">GP</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">The stadium section is incredibly technical.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-11">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R11</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Indianapolis Oval</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F Junior</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-11" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-11" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">4.02km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">4</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Oval</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Pure speed. Drafting is the only way to win.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-12">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R12</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Indianapolis Road</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">German Group A</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-cyan-600/10 text-cyan-400 border border-cyan-400/20">GT3</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-12" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-12" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">4.19km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">13</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Roval</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Uses the main oval banking in reverse.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-13">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R13</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Spa Historic 1970</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F Vintage Cars 2</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-13" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-13" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">14.12km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">20</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Historical</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Twice as long as modern Spa.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-14">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R14</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Le Mans 24</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">Stock Car 2023</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-yellow-600/10 text-yellow-500 border border-yellow-500/20">ENDUR</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-14" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-14" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">13.63km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">38</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Endurance</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Home of the famous 24-hour race.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-15">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R15</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Suzuka (Kanzai)</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F V10 G2</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-15" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-15" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">5.81km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">18</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">GP</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Unique figure-eight layout with the 130R corner.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-16">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R16</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Kyalami Historic</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">Fusca Hot</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-purple-600/10 text-purple-400 border border-purple-400/20">SPRNT</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-16" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-16" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">4.10km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">9</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Classic</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Fast and flowing layout in South Africa.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-17">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R17</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Laguna Seca</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">GT3</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-cyan-600/10 text-cyan-400 border border-cyan-400/20">GT3</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-17" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-17" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">3.60km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">11</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">GP</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Features the 'Corkscrew' - a 5-story drop.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-18">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R18</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Montreal</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F V8 Gen 3</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-18" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-18" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">4.36km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">14</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Street/GP</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Famous for the 'Wall of Champions'.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-19">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R19</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Sebring</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">GT Classics</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-yellow-600/10 text-yellow-500 border border-yellow-500/20">ENDUR</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-19" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-19" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">6.02km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">17</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">Road</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">Extremely bumpy concrete track surface.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr><tr class="race-row" id="row-20">
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R20</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">Monza</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">F Ulti Hyb G4</td>
+                    <td class="p-6">
+                        <span class="format-tag bg-red-600/10 text-red-500 border border-red-500/20">F1</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="chevron-down" id="icon-20" class="lucide lucide-chevron-down intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"><path d="m6 9 6 6 6-6"></path></svg>
+                    </td>
+                </tr><tr>
+                    <td colspan="5" class="p-0">
+                        <div id="intel-20" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">5.79km</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">11</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">GP</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">The Temple of Speed.</p></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULTS TRACKER SECTION -->
+        <section id="standings" class="space-y-10">
+            <div>
+                <h3 class="text-4xl font-black italic uppercase tracking-tighter">Live Results Tracker</h3>
+                <p class="text-neutral-500 text-sm uppercase tracking-[0.3em] mt-2">Championship Point Progress</p>
+            </div>
+            
+            <div class="glass-panel rounded-2xl overflow-hidden shadow-2xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-neutral-900 text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 border-b border-neutral-800">
+                                <th class="p-6 w-20">Rnd</th>
+                                <th class="p-6">Track</th>
+                                <th class="p-6 text-center border-l border-neutral-800/50">Ant <span class="font-normal opacity-50 italic lowercase">q / p / pts</span></th>
+                                <th class="p-6 text-center border-l border-neutral-800/50 text-red-500">Bee <span class="font-normal opacity-50 italic lowercase">q / p / pts</span></th>
+                                <th class="p-6 text-right border-l border-neutral-800/50">Delta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standings-body"><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">1</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Adelaide</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">2</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Bathurst Historic</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">3</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Monaco (Azure)</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">4</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Cascavel</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">5</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Interlagos</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">6</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Barcelona GP</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">7</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Imola Hist 88</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">8</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Daytona Road</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">9</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Silverstone</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">10</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Hockenheim Ring</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">11</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Indianapolis Oval</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">12</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Indianapolis Road</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">13</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Spa Historic 1970</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">14</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Le Mans 24</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">15</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Suzuka (Kanzai)</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">16</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Kyalami Historic</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">17</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Laguna Seca</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">18</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Montreal</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">19</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Sebring</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr><tr class="race-row pointer-events-none">
+                    <td class="p-6 mono text-[10px] text-neutral-600">20</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">Monza</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                </tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- REGULATIONS & POINTS SECTION -->
+        <section id="regulations" class="grid grid-cols-1 md:grid-cols-2 gap-16 pb-20">
+            <div class="space-y-10">
+                <h4 class="text-2xl font-black italic uppercase tracking-tighter flex items-center gap-4">
+                    <span class="w-12 h-1 bg-red-600"></span> Session Formats
+                </h4>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-6 bg-neutral-900/30 rounded-xl border border-neutral-800/50">
+                        <span class="font-black uppercase text-sm tracking-widest text-red-500">F1 Style</span>
+                        <span class="mono text-sm font-bold bg-black px-3 py-1 rounded">20P / 10Q / 30R</span>
+                    </div>
+                    <div class="flex items-center justify-between p-6 bg-neutral-900/30 rounded-xl border border-neutral-800/50">
+                        <span class="font-black uppercase text-sm tracking-widest text-cyan-500">GT3 R Style</span>
+                        <span class="mono text-sm font-bold bg-black px-3 py-1 rounded">20P / 10Q / 30R</span>
+                    </div>
+                    <div class="flex items-center justify-between p-6 bg-neutral-900/30 rounded-xl border border-neutral-800/50">
+                        <span class="font-black uppercase text-sm tracking-widest text-yellow-500">Endurance</span>
+                        <span class="mono text-sm font-bold bg-black px-3 py-1 rounded">20P / 10Q / 45R</span>
+                    </div>
+                    <div class="flex items-center justify-between p-6 bg-neutral-900/30 rounded-xl border border-neutral-800/50">
+                        <span class="font-black uppercase text-sm tracking-widest text-purple-500">Sprint</span>
+                        <span class="mono text-xs font-bold bg-black px-3 py-1 rounded text-right leading-tight">20P / 5Q1 / 15R1 / 5Q2 / 15R2</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-10">
+                <h4 class="text-2xl font-black italic uppercase tracking-tighter flex items-center gap-4">
+                    <span class="w-12 h-1 bg-red-600"></span> Points System
+                </h4>
+                <div class="grid grid-cols-5 gap-2">
+                    <div class="bg-red-600/10 border border-red-500/30 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-red-500">P1</span>
+                        <span class="mono text-lg font-bold">25</span>
+                    </div>
+                    <div class="bg-neutral-900/80 border border-neutral-800 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-neutral-500">P2</span>
+                        <span class="mono text-lg font-bold">18</span>
+                    </div>
+                    <div class="bg-neutral-900/80 border border-neutral-800 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-neutral-500">P3</span>
+                        <span class="mono text-lg font-bold">15</span>
+                    </div>
+                    <div class="bg-neutral-900/80 border border-neutral-800 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-neutral-500">P4</span>
+                        <span class="mono text-lg font-bold">12</span>
+                    </div>
+                    <div class="bg-neutral-900/80 border border-neutral-800 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-neutral-500">P5</span>
+                        <span class="mono text-lg font-bold">10</span>
+                    </div>
+                    <div class="bg-neutral-900/40 border border-neutral-800/50 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-neutral-600">P6</span>
+                        <span class="mono text-lg font-bold text-neutral-400">8</span>
+                    </div>
+                    <div class="bg-neutral-900/40 border border-neutral-800/50 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-neutral-600">P7</span>
+                        <span class="mono text-lg font-bold text-neutral-400">6</span>
+                    </div>
+                    <div class="bg-neutral-900/40 border border-neutral-800/50 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-neutral-600">P8</span>
+                        <span class="mono text-lg font-bold text-neutral-400">4</span>
+                    </div>
+                    <div class="bg-neutral-900/40 border border-neutral-800/50 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-neutral-600">P9</span>
+                        <span class="mono text-lg font-bold text-neutral-400">2</span>
+                    </div>
+                    <div class="bg-neutral-900/40 border border-neutral-800/50 p-3 rounded flex flex-col items-center">
+                        <span class="text-[8px] font-black uppercase text-neutral-600">P10</span>
+                        <span class="mono text-lg font-bold text-neutral-400">1</span>
+                    </div>
+                </div>
+                <p class="text-[9px] text-neutral-600 mono uppercase tracking-widest text-center mt-4">Fastest Lap: +1 Point</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-12 border-t border-neutral-900 text-center bg-black/40">
+        <p class="text-[10px] font-black uppercase tracking-[0.5em] text-neutral-700 mb-2">Race Control • AMS2 Ant vs Bee v1.2</p>
+        <p class="text-[8px] text-neutral-800 mono">PRE-SEASON BUILD</p>
+    </footer>
+
+    <script>
+        const raceData = [
+            { id: 1, track: "Adelaide", car: "Porsche 911", format: "GT3", intel: { len: "3.22km", turns: 14, style: "Street", note: "High-speed street circuit with punishing turn 8 wall." } },
+            { id: 2, track: "Bathurst Historic", car: "F Vintage G1", format: "F1", intel: { len: "6.21km", turns: 23, style: "Hybrid", note: "The mountain straight and winding descent are legendary." } },
+            { id: 3, track: "Monaco (Azure)", car: "F Classic G2", format: "F1", intel: { len: "3.33km", turns: 19, style: "Street", note: "Tightest circuit in the world. Passing is nearly impossible." } },
+            { id: 4, track: "Cascavel", car: "Copa Truck", format: "SPRNT", intel: { len: "3.05km", turns: 9, style: "Technical", note: "Fast banking turn 1 is the main highlight." } },
+            { id: 5, track: "Interlagos", car: "F Ulti Hyb G4", format: "F1", intel: { len: "4.31km", turns: 15, style: "GP", note: "Anti-clockwise layout with elevation changes." } },
+            { id: 6, track: "Barcelona GP", car: "F Ulti Hyb G4", format: "F1", intel: { len: "4.67km", turns: 16, style: "GP", note: "High-speed corners test aerodynamic efficiency." } },
+            { id: 7, track: "Imola Hist 88", car: "F Classic G4", format: "F1", intel: { len: "4.91km", turns: 22, style: "Classic GP", note: "Historic layout without modern chicane additions." } },
+            { id: 8, track: "Daytona Road", car: "GT3", format: "ENDUR", intel: { len: "5.73km", turns: 12, style: "Roval", note: "High banking meets a technical infield." } },
+            { id: 9, track: "Silverstone", car: "Coppa Fusca", format: "SPRNT", intel: { len: "5.89km", turns: 18, style: "GP", note: "The home of British motor racing." } },
+            { id: 10, track: "Hockenheim Ring", car: "GT3", format: "GT3", intel: { len: "4.57km", turns: 17, style: "GP", note: "The stadium section is incredibly technical." } },
+            { id: 11, track: "Indianapolis Oval", car: "F Junior", format: "F1", intel: { len: "4.02km", turns: 4, style: "Oval", note: "Pure speed. Drafting is the only way to win." } },
+            { id: 12, track: "Indianapolis Road", car: "German Group A", format: "GT3", intel: { len: "4.19km", turns: 13, style: "Roval", note: "Uses the main oval banking in reverse." } },
+            { id: 13, track: "Spa Historic 1970", car: "F Vintage Cars 2", format: "F1", intel: { len: "14.12km", turns: 20, style: "Historical", note: "Twice as long as modern Spa." } },
+            { id: 14, track: "Le Mans 24", car: "Stock Car 2023", format: "ENDUR", intel: { len: "13.63km", turns: 38, style: "Endurance", note: "Home of the famous 24-hour race." } },
+            { id: 15, track: "Suzuka (Kanzai)", car: "F V10 G2", format: "F1", intel: { len: "5.81km", turns: 18, style: "GP", note: "Unique figure-eight layout with the 130R corner." } },
+            { id: 16, track: "Kyalami Historic", car: "Fusca Hot", format: "SPRNT", intel: { len: "4.10km", turns: 9, style: "Classic", note: "Fast and flowing layout in South Africa." } },
+            { id: 17, track: "Laguna Seca", car: "GT3", format: "GT3", intel: { len: "3.60km", turns: 11, style: "GP", note: "Features the 'Corkscrew' - a 5-story drop." } },
+            { id: 18, track: "Montreal", car: "F V8 Gen 3", format: "F1", intel: { len: "4.36km", turns: 14, style: "Street/GP", note: "Famous for the 'Wall of Champions'." } },
+            { id: 19, track: "Sebring", car: "GT Classics", format: "ENDUR", intel: { len: "6.02km", turns: 17, style: "Road", note: "Extremely bumpy concrete track surface." } },
+            { id: 20, track: "Monza", car: "F Ulti Hyb G4", format: "F1", intel: { len: "5.79km", turns: 11, style: "GP", note: "The Temple of Speed." } }
+        ];
+
+        function getFormatStyles(format) {
+            switch(format) {
+                case 'F1': return 'bg-red-600/10 text-red-500 border border-red-500/20';
+                case 'GT3': return 'bg-cyan-600/10 text-cyan-400 border border-cyan-400/20';
+                case 'ENDUR': return 'bg-yellow-600/10 text-yellow-500 border border-yellow-500/20';
+                case 'SPRNT': return 'bg-purple-600/10 text-purple-400 border border-purple-400/20';
+                default: return 'bg-neutral-800 text-neutral-400';
+            }
+        }
+
+        function toggleIntel(raceId) {
+            const drawer = document.getElementById(`intel-${raceId}`);
+            const row = document.getElementById(`row-${raceId}`);
+            const icon = document.getElementById(`icon-${raceId}`);
+            const isOpen = drawer.classList.contains('open');
+            document.querySelectorAll('.intel-drawer').forEach(d => d.classList.remove('open'));
+            document.querySelectorAll('.race-row').forEach(r => r.classList.remove('active'));
+            document.querySelectorAll('.intel-icon').forEach(i => i.style.transform = 'rotate(0deg)');
+            if (!isOpen) {
+                drawer.classList.add('open');
+                row.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function populateUI() {
+            const calendarBody = document.getElementById('calendar-body');
+            const standingsBody = document.getElementById('standings-body');
+            if (!calendarBody || !standingsBody) return;
+            calendarBody.innerHTML = '';
+            standingsBody.innerHTML = '';
+            raceData.forEach(race => {
+                const row = document.createElement('tr');
+                row.className = "race-row";
+                row.id = `row-${race.id}`;
+                row.onclick = () => toggleIntel(race.id);
+                row.innerHTML = `
+                    <td class="p-6 mono text-xs text-neutral-500 font-bold">R${String(race.id).padStart(2, '0')}</td>
+                    <td class="p-6">
+                        <div class="font-black uppercase italic text-sm tracking-tight text-white">${race.track}</div>
+                    </td>
+                    <td class="p-6 text-xs font-bold text-neutral-400 uppercase italic">${race.car}</td>
+                    <td class="p-6">
+                        <span class="format-tag ${getFormatStyles(race.format)}">${race.format}</span>
+                    </td>
+                    <td class="p-6 text-right">
+                        <i data-lucide="chevron-down" id="icon-${race.id}" class="intel-icon w-4 h-4 text-neutral-700 ml-auto transition-transform"></i>
+                    </td>
+                `;
+                const intelRow = document.createElement('tr');
+                intelRow.innerHTML = `
+                    <td colspan="5" class="p-0">
+                        <div id="intel-${race.id}" class="intel-drawer">
+                            <div class="p-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Length</p><p class="mono text-lg font-bold text-neutral-300">${race.intel.len}</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Turns</p><p class="mono text-lg font-bold text-neutral-300">${race.intel.turns}</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-neutral-600 tracking-widest">Type</p><p class="mono text-lg font-bold text-neutral-300 uppercase italic">${race.intel.style}</p></div>
+                                <div><p class="text-[9px] font-black uppercase text-red-900 tracking-widest">Notes</p><p class="text-xs text-neutral-500 italic mt-1">${race.intel.note}</p></div>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                calendarBody.appendChild(row);
+                calendarBody.appendChild(intelRow);
+                const sRow = document.createElement('tr');
+                sRow.className = "race-row pointer-events-none";
+                sRow.innerHTML = `
+                    <td class="p-6 mono text-[10px] text-neutral-600">${race.id}</td>
+                    <td class="p-6 font-bold uppercase italic text-xs text-neutral-300">${race.track}</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-neutral-500">-- / -- / 0</td>
+                    <td class="p-6 text-center border-l border-neutral-800/50 mono text-[10px] text-red-500/50">-- / -- / 0</td>
+                    <td class="p-6 text-right border-l border-neutral-800/50 mono text-[10px] text-neutral-800">0</td>
+                `;
+                standingsBody.appendChild(sRow);
+            });
+            if (window.lucide) lucide.createIcons();
+        }
+        window.onload = populateUI;
+        setTimeout(populateUI, 100);
+    </script>
+
+
+</body>
+</html>

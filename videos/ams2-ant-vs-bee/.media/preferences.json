@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "preferences": {
+    "destination": {
+      "value": "discord",
+      "confirmed_in": [
+        "ams2-ant-vs-bee"
+      ],
+      "updated_at": "2026-09-17T02:27:39.740Z"
+    },
+    "aspect": {
+      "value": "1920x1080",
+      "confirmed_in": [
+        "ams2-ant-vs-bee"
+      ],
+      "updated_at": "2026-09-17T02:27:39.803Z"
+    },
+    "language": {
+      "value": "en",
+      "confirmed_in": [
+        "ams2-ant-vs-bee"
+      ],
+      "updated_at": "2026-09-17T02:27:39.865Z"
+    },
+    "flow": {
+      "value": "automation",
+      "confirmed_in": [
+        "ams2-ant-vs-bee"
+      ],
+      "updated_at": "2026-09-17T02:27:39.942Z"
+    },
+    "storyboard": {
+      "value": "yes",
+      "confirmed_in": [
+        "ams2-ant-vs-bee"
+      ],
+      "updated_at": "2026-09-17T02:27:40.006Z"
+    },
+    "voice": {
+      "value": "am_michael",
+      "confirmed_in": [
+        "ams2-ant-vs-bee"
+      ],
+      "updated_at": "2026-09-17T02:27:40.072Z"
+    },
+    "style_preset.product-launch-video": {
+      "value": "code-editorial",
+      "confirmed_in": [
+        "ams2-ant-vs-bee"
+      ],
+      "updated_at": "2026-09-17T02:30:11.670Z"
+    }
+  },
+  "sightings": {}
+}
